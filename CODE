@@ -1,0 +1,93 @@
+import tkinter as tk
+
+calculation = ""
+
+# Function to add a symbol to the calculation
+def add_calculation(symbol):
+    global calculation
+    calculation += str(symbol)
+    # Update the text result widget with the current calculation
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
+
+# Function to evaluate the calculation
+def evaluate():
+    global calculation
+    try:
+        calculation = str(eval(calculation))
+        # Update the text result widget with the result of the calculation
+        text_result.delete(1.0, "end")
+        text_result.insert(1.0, calculation)
+    except:
+        # Clear the calculation and display an error message
+        clear()
+        text_result.insert(1.0, "Error")
+        pass
+
+# Function to remove the last character from the calculation
+def remove():
+    global calculation
+    calculation = calculation[:-1]
+    # Update the text result widget after removing the character
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
+
+# Function to clear the calculation
+def clear():
+    global calculation
+    calculation = ""
+    # Clear the text result widget
+    text_result.delete(1.0, "end")
+
+# Create the main tkinter window
+root = tk.Tk()
+root.title("Calculator")  # Set the window title
+root.geometry("300x300")  # Set the window size
+
+# Create a text widget for displaying the calculation
+text_result = tk.Text(root, height=2, width=16)
+text_result.grid(columnspan=6)
+
+# Define button labels and their positions
+buttons = [
+    ("1", 5, 1), ("2", 5, 2), ("3", 5, 3),
+    ("4", 4, 1), ("5", 4, 2), ("6", 4, 3),
+    ("7", 3, 1), ("8", 3, 2), ("9", 3, 3),
+    ("0", 6, 2), ("+", 4, 4), ("-", 3, 4),
+    ("*", 2, 3), ("/", 2, 2), ("(", 6, 1),
+    (")", 6, 3), ("=", 5, 4), ("C", 2, 4),
+    ("X", 2, 1),
+]
+
+# Create buttons in a loop with specified dimensions
+button_width = 5
+button_height = 2
+
+buttons_dict = {}
+for (text, row, col) in buttons:
+    if text == "=":
+        # Create a taller "=" button that spans two rows
+        button = tk.Button(root, text=text, width=button_width, height=5)
+        button.grid(row=row, column=col, rowspan=2)
+    else:
+        # Create regular buttons with the specified dimensions
+        button = tk.Button(root, text=text, width=button_width, height=button_height)
+        button.grid(row=row, column=col)
+    buttons_dict[text] = button
+
+# Configure button commands
+for text in buttons_dict.keys():
+    if text.isdigit() or text in "+-*/()":
+        buttons_dict[text].configure(command=lambda t=text: add_calculation(t))
+    elif text == "=":
+        buttons_dict[text].configure(command=evaluate)
+    elif text == "C":
+        buttons_dict[text].configure(command=clear)
+    elif text == "X":
+        buttons_dict[text].configure(command=remove)
+
+# Center the window on the screen
+root.eval('tk::PlaceWindow . center')
+
+# Start the tkinter main event loop
+root.mainloop()
