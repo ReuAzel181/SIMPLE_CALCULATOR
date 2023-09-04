@@ -42,11 +42,12 @@ def clear():
 # Create the main tkinter window
 root = tk.Tk()
 root.title("Calculator")  # Set the window title
-root.geometry("300x300")  # Set the window size
+root.geometry("400x600+440+25")  # Set the window size
+root.resizable(False, False)
 
 # Create a text widget for displaying the calculation
-text_result = tk.Text(root, height=2, width=16)
-text_result.grid(columnspan=6)
+text_result = tk.Text(root, height=8, width=50)
+text_result.grid(columnspan=6, ipadx=0, ipady=7)
 
 # Define button labels and their positions
 buttons = [
@@ -60,14 +61,14 @@ buttons = [
 ]
 
 # Create buttons in a loop with specified dimensions
-button_width = 5
-button_height = 2
+button_width = 12
+button_height = 4
 
 buttons_dict = {}
 for (text, row, col) in buttons:
     if text == "=":
         # Create a taller "=" button that spans two rows
-        button = tk.Button(root, text=text, width=button_width, height=5)
+        button = tk.Button(root, text=text, width=button_width, height=6)
         button.grid(row=row, column=col, rowspan=2)
     else:
         # Create regular buttons with the specified dimensions
@@ -87,7 +88,7 @@ for text in buttons_dict.keys():
         buttons_dict[text].configure(command=remove)
 
 # Center the window on the screen
-root.eval('tk::PlaceWindow . center')
+
 
 # Start the tkinter main event loop
 root.mainloop()
